@@ -1,0 +1,10 @@
+{
+  "name": "s7bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Aleksey Dorokhov",
+  "license": "MIT",
+  "devDependencies": {
+    "winston": "^2.3.1"
+  }
+}
