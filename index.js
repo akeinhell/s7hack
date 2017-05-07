@@ -1,6 +1,8 @@
-import bot from './bot';
-import logger from './bot/logger';
+import S7Bot from './bot';
+import log from './bot/logger';
+import TelegramProvider from './bot/providers/telegram-provider';
 
+log.debug('starting Bot');
 
-logger.info('hello');
-
+S7Bot.use(new TelegramProvider({token:'hello'}));
+S7Bot.run();
