@@ -1,8 +1,13 @@
 import S7Bot from './bot';
-import log from './bot/logger';
 import TelegramProvider from './bot/providers/telegram-provider';
+import dotenv from 'dotenv';
+import Searcher from './bot/search';
 
-log.debug('starting Bot');
+dotenv.config();
+S7Bot.use(new TelegramProvider({
+    token: process.env.TELEGRAM_TOKEN
+}));
 
-S7Bot.use(new TelegramProvider({token:'hello'}));
+Searcher.init();
+
 S7Bot.run();
