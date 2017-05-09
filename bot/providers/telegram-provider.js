@@ -27,7 +27,10 @@ export default class TelegramProvider {
     }
 
     reply(to, text) {
-        this.bot.sendMessage(to, text);
+        this.bot.sendMessage(to, text, {
+            //parse_mode: 'markdown',
+            disable_web_page_preview: true
+        });
     }
 
 
