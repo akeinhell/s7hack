@@ -10,7 +10,7 @@ dotenv.config();
 let client = new elasticsearch.Client({
     host: process.env.ELASTIC_URL,
     requestTimeout: 20000,
-    log: 'trace'
+    // log: 'trace'
 });
 
 

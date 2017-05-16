@@ -4,17 +4,24 @@ const tsFormat = () => (new Date()).toLocaleTimeString();
 
 const logDir = './logs';
 
+
+const consoleParams = {
+    colorize: true,
+    prettyPrint: true,
+    silent: false,
+    timestamp: tsFormat,
+};
 const options = {
     transports: [
-        new (winston.transports.Console)({
-            colorize: true,
-            timestamp: tsFormat,
-        }),
+        new (winston.transports.Console)(consoleParams),
         new (winston.transports.File)({ filename: `${logDir}/runtime.log`})
     ],
     exceptionHandlers: [
-        new winston.transports.File({ filename: `${logDir}/exceptions.log`}),
-        new (winston.transports.Console)(),
+        new winston.transports.File({
+            filename: `${logDir}/exceptions.log`,
+            timestamp: tsFormat,
+        }),
+        new (winston.transports.Console)(consoleParams),
     ]
 };
 export default new winston.Logger(options);
