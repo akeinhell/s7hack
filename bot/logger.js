@@ -9,7 +9,9 @@ const consoleParams = {
     colorize: true,
     prettyPrint: true,
     silent: false,
+    json: false,
     timestamp: tsFormat,
+    level: 'debug'
 };
 const options = {
     transports: [
@@ -20,6 +22,7 @@ const options = {
         new winston.transports.File({
             filename: `${logDir}/exceptions.log`,
             timestamp: tsFormat,
+            json: false,
         }),
         new (winston.transports.Console)(consoleParams),
     ]
