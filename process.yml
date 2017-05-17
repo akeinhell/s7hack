@@ -1,0 +1,22 @@
+apps:
+  - script: index.js
+    name: s7bot
+    watch:
+        - index.js
+    interpreter: babel-node
+    env:
+      NODE_ENV: development
+    env_production:
+      NODE_ENV: production
+deploy:
+    production:
+        user: ubuntu
+        key: /home/akeinhell/.ssh/id_rsa
+        host: redfoxbot.ru
+        repo: git@github.com:s7hack/s7hack.git
+        path: /var/www/s7/s7hack
+        env:
+            NODE_ENV: production
+            DEBUG: srv*
+        post-deploy: 'yarn install && pm2 startOrRestart process.yml'
+        pre-setup: 'yarn install global pm2'
