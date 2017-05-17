@@ -1,3 +1,4 @@
 node_modules/
 .idea/
 .env
+srv/public/stylesheets/style.css
