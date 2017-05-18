@@ -3,6 +3,7 @@ import TelegramProvider from './bot/providers/telegram-provider';
 import dotenv from 'dotenv';
 import app from './srv/app';
 import './srv';
+import Searcher from './bot/search';
 import VkProvider from './bot/providers/vk-provider';
 
 dotenv.config();
@@ -13,7 +14,7 @@ S7Bot.use(new VkProvider({
     token: process.env.VK_TOKEN
 }));
 
-//Searcher.init();
+Searcher.init();
 
 
-S7Bot.run();
+// S7Bot.run();

@@ -1,16 +1,16 @@
-import  elasticsearch from 'elasticsearch';
-import  fs from 'fs';
-import  readline from 'readline';
-import  logger from './logger';
-import dotenv from "dotenv";
-import  util from 'util';
+import elasticsearch from 'elasticsearch';
+import fs from 'fs';
+import readline from 'readline';
+import logger from './logger';
+import dotenv from 'dotenv';
+import util from 'util';
 
 dotenv.config();
 
 let client = new elasticsearch.Client({
     host: process.env.ELASTIC_URL,
     requestTimeout: 20000,
-    // log: 'trace'
+    log: 'info'
 });
 
 
@@ -21,8 +21,8 @@ class Searcher {
             analyzer: 'russian',
             text
         })
-            .then(data => data.tokens.map(i => i.token))
-            .catch(e => logger.error(e));
+          .then(data => data.tokens.map(i => i.token))
+          .catch(e => logger.error(e));
     }
 
     find(terms) {
@@ -36,32 +36,32 @@ class Searcher {
                     size: 1,
                     query: {
                         query_string: {
+                            fields: ['name_rus', 'city_rus^2', 'country_rus^3', 'tags^5'],
                             query: `${t}*`,
                             analyze_wildcard: true
                         }
                     }
                 }
             })
-                .then(data => {
-                    return data.hits.hits.map(i => i._source).pop();
-                });
+              .then(data => {
+                  return data.hits.hits.map(i => i._source).pop();
+              });
         });
         return Promise.all(promises);
     }
 
     init() {
-        /*client.indices.create({
-         index: 's7'
-         },function(err,resp,status) {
-         if(err) {
-         console.log(err);
-         }
-         else {
-         console.log("create",resp, status);
-         }
-         });
+        client.indices.create({
+            index: 's7'
+        }, function (err, resp, status) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log('create', resp, status);
+            }
+        });
 
-         return;*/
 
         let inputFile = 'airport.csv';
 
@@ -74,29 +74,31 @@ class Searcher {
         lineReader.on('line', (line) => {
             let lines = line.split('\t');
             if (headers.length === 0) {
-                headers = [].concat(lines);
+                headers = [].concat(lines.map(l => {
+                    return l.split('"').join('').trim();
+                }));
                 return;
             }
 
             let body = {};
             lines.forEach((el, index) => {
                 const key = headers[index];
-                body[key] = el;
+                body[key] = key === 'tags' ? el.trim().split(',') : el.split('"').join('').trim();
             });
             indexArray.push({
                 index: {
                     _index: 's7',
                     _type: 'airport',
                     _id: body.iata_code,
-                    body
                 }
             });
+            indexArray.push({...body});
         });
 
         lineReader.on('close', () => {
             client.bulk({body: indexArray})
-                .then(d => logger.info('done', d))
-                .catch(e => logger.error(e));
+              .then(d => logger.info('Init search done', util.inspect(d, {depth: null, maxArrayLength: 5})))
+              .catch(e => logger.error(e.message));
         });
 
 
