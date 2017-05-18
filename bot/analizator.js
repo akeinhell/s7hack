@@ -1,5 +1,57 @@
 import Searcher from './search';
 import logger from './logger';
+import Az from 'az';
+
+
+Az.Morph.init('node_modules/az/dicts', (err, _Morph) => {
+    if (err) {
+        return logger.error('123123', err.message);
+    }
+    logger.info('done!');
+});
+async function detectCity(word) {
+    return Promise.race([Searcher.find([word])]);
+}
+
+const isDirection = (text) => ['из', 'в', 'на'].indexOf(text.toLowerCase()) >= 0;
+
+export const analizeCity = (text) => {
+    text = text.split(',').join('');
+    return new Promise((resolve, reject) => {
+        Searcher.analize(text)
+          .then(tokens => {
+              return text.split(' ').reduce((prev, word) => {
+                  let i = tokens.findIndex((w) => {
+                      return word.indexOf(w) >= 0;
+                  }, word);
+                  let ret = null;
+                  switch (true) {
+                      case (!!tokens[i]):
+                          ret = {
+                              type: 'city',
+                              data: tokens[i]
+                          };
+                          break;
+                      case isDirection(word):
+                          ret = {
+                              type: 'direction',
+                              data: word
+                          };
+                          break
+                  }
+                  return {
+                      ...prev,
+                      [word]: ret
+                  };
+              }, {});
+          })
+          .then(obj => resolve(obj))
+          .catch(e => reject(e))
+        ;
+    });
+
+
+};
 
 const getUrl = (from, to) => {
     logger.info('from', from);
@@ -17,6 +69,7 @@ const getUrl = (from, to) => {
     };
     return `https://search.aviasales.ru/?` + qs.stringify(params);
 };
+
 
 const old = () => {
     Searcher
@@ -46,4 +99,4 @@ const old = () => {
             .catch(e => logger.error(e))
           ;
       });
-}
+};

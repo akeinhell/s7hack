@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "async": "^2.4.0",
+    "az": "^0.2.3",
     "csv-parse": "^1.2.0",
     "dotenv": "^4.0.0",
     "elasticsearch": "^13.0.0",

@@ -1,8 +1,9 @@
 import eventBus, {EVENT_MESSAGE} from './events';
 
 import logger from './logger';
-import qs from 'querystring';
+import util from 'util';
 import {getState, INIT_STATE} from './state';
+import {analizeCity} from './analizator';
 
 
 class S7bot {
@@ -14,7 +15,6 @@ class S7bot {
         this.providers.push(provider);
     }
 
-    response
 
     run() {
         eventBus.on(EVENT_MESSAGE, (message, chat, provider) => {
@@ -23,9 +23,15 @@ class S7bot {
                   logger.info('EVENT_MESSAGE state', state);
                   switch (state.state) {
                       case INIT_STATE:
-                          provider.reply(chat, 'HELLO MAZAFACA');
+                          // provider.reply(chat, 'приветствую, Куда хочешь ебануть?');
                           break;
                   }
+
+                  analizeCity(message)
+                    .then(data => {
+                        console.log(util.inspect(data, {depth: null, colors: false}));
+                    })
+                    .catch(e => logger.error(e));
               });
         });
 
