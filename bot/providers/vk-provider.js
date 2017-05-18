@@ -1,13 +1,14 @@
 import logger from '../logger';
 import eventBus, {EVENT_VK_MESSAGE} from '../events';
 import {EVENT_MESSAGE} from '../events';
-import _ from 'lodash';
-import TelegramBot from 'node-telegram-bot-api';
-import util from 'util';
+import VKApi from 'node-vkapi';
 
 export default class VkProvider {
     constructor(config = {}) {
-
+        this.token = config.token;
+        this.vk = new VKApi({
+            token: config.token
+        });
     }
 
     start() {
@@ -19,6 +20,13 @@ export default class VkProvider {
     }
 
     reply(to, text) {
-       logger.info(to, text);
+       logger.info(`response [${to}]: ${text}`);
+        this.vk.call('messages.send', {
+            user_id: to,
+            message: text
+        })
+          .then(r => logger.info(r))
+          .catch(e => logger.error(e))
+        ;
     }
 }

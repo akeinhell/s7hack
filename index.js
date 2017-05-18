@@ -10,7 +10,7 @@ S7Bot.use(new TelegramProvider({
     token: process.env.TELEGRAM_TOKEN
 }));
 S7Bot.use(new VkProvider({
-    token: process.env.TELEGRAM_TOKEN
+    token: process.env.VK_TOKEN
 }));
 
 //Searcher.init();
