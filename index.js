@@ -3,9 +3,13 @@ import TelegramProvider from './bot/providers/telegram-provider';
 import dotenv from 'dotenv';
 import app from './srv/app';
 import './srv';
+import VkProvider from './bot/providers/vk-provider';
 
 dotenv.config();
 S7Bot.use(new TelegramProvider({
+    token: process.env.TELEGRAM_TOKEN
+}));
+S7Bot.use(new VkProvider({
     token: process.env.TELEGRAM_TOKEN
 }));
 

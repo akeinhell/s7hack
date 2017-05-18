@@ -17,6 +17,10 @@ export default class TelegramProvider {
         this.bot = new TelegramBot(this.config.token, {
             polling: true
         });
+        this.bot.on('error', (err) => {
+            logger.error(err.message);
+            this.bot.stopPolling();
+        });
     }
 
     start() {
