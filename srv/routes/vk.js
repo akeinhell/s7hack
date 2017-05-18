@@ -10,7 +10,7 @@ router.post('/callback', function (req, res, next) {
     let response = 'incorrect';
     switch (type) {
         case 'message_new':
-            response = 'message_new.ok';
+            response = 'ok';
             eventBus.emit(EVENT_VK_MESSAGE, req.body.object);
             break;
         case 'confirmation':
