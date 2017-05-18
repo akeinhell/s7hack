@@ -16,5 +16,4 @@ S7Bot.use(new VkProvider({
 
 Searcher.init();
 
-
-// S7Bot.run();
+S7Bot.run();

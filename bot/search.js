@@ -53,14 +53,9 @@ class Searcher {
     init() {
         client.indices.create({
             index: 's7'
-        }, function (err, resp, status) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                console.log('create', resp, status);
-            }
-        });
+        })
+          .then(() => logger.info('index created'))
+          .catch((e) => logger.error(`index create failed: ${e.message}`));
 
 
         let inputFile = 'airport.csv';
@@ -97,7 +92,7 @@ class Searcher {
 
         lineReader.on('close', () => {
             client.bulk({body: indexArray})
-              .then(d => logger.info('Init search done', util.inspect(d, {depth: null, maxArrayLength: 5})))
+              .then(d => logger.info('Init search done', util.inspect(d, {depth: 0, maxArrayLength: 5})))
               .catch(e => logger.error(e.message));
         });
 
