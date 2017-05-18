@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import redisClient from 'redis';
 import bluebird from 'bluebird';
+import logger from './logger';
 
 export const INIT_STATE = 'START';
 
